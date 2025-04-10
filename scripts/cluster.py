@@ -42,7 +42,7 @@ def main():
                     os.system('yc managed-kubernetes cluster start --name otus')
                     logging.debug(f"Starting cluster")
     if not cluster_exists:
-        creation = subprocess.getoutput('/usr/bin/yc managed-kubernetes cluster create --name otus --network-name otus --service-account-name k8s --subnet-name otus --zone ru-central1-a --cluster-ipv4-range "172.17.0.0/16" --service-ipv4-range "172.18.0.0/16" --public-ip --format json')
+        creation = subprocess.getoutput('/usr/bin/yc managed-kubernetes cluster create --name otus --network-name otus --service-account-name k8s --node-service-account-name k8s --subnet-name otus --zone ru-central1-a --cluster-ipv4-range "172.17.0.0/16" --service-ipv4-range "172.18.0.0/16" --public-ip --format json')
         logging.debug(f"Creation cluster: \n {creation}")
         
 
