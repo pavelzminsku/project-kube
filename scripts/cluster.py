@@ -136,7 +136,7 @@ def main():
             logging.error("Error while installing helm. Exiting")
             finalizer()
             exit(1)
-        error = os.system(f'yc managed-kubernetes cluster get-credentials --internal --name {config["name"]} --force')
+        error = os.system(f'yc managed-kubernetes cluster get-credentials --external --name {config["name"]} --force')
         if error:
             logging.error("Error taking config from yc. Exiting")
             finalizer()
