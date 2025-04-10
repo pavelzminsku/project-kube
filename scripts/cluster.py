@@ -55,7 +55,7 @@ if __name__ == "__main__":
 
     try:
         main()
-    except:
-        print('Error while running script')
+    except Exception as e:
+        print(f'Error while running script: {e}')
     finally:
         finalizer()
