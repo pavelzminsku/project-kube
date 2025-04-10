@@ -70,7 +70,7 @@ def create_cluster(cluster_name: str, nodes: int):
         logging.info(f'There is no nodes in cluster with name {cluster_name}, creating...')
         creation = subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes node-group create \
                                         --cluster-name {cluster_name} --cores 4 --disk-size 40 --disk-type network-nvme \
-                                        --fixed-size {nodes} --location zone=ru-central1-a,subnet-name=otus --memory 6> \
+                                        --fixed-size {nodes} --location zone=ru-central1-a,subnet-name=otus --memory 6 \
                                         --name {cluster_name} --network-acceleration-type standard \
                                         --network-interface security-group-ids=default-sg-enpeuj757u5vlvs989m4,ipv4-address=auto \
                                         --container-runtime containerd --node-name {cluster_name}-')
@@ -79,7 +79,7 @@ def create_cluster(cluster_name: str, nodes: int):
         json_creation = json.loads(creation[start_of_json:])
         json_creation = json.loads(creation)
         logging.debug(f"Creation json {json_creation}")
-        
+
 def main():
     if not install_yc():
         logging.error(f"Can't install Yandex cli. Exiting")
