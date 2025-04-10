@@ -27,7 +27,7 @@ def main():
             if not error:
                 error += os.system('/usr/bin/yc config set cloud-id $CLOUD')
                 logging.debug(f"Adding cloud errors: {error}")
-                error += os.system('/usr/bin/yc set folder-id $FOLDER')
+                error += os.system('/usr/bin/yc config set folder-id $FOLDER')
                 logging.debug(f"Adding folder errors: {error}")
         if error:
             raise Exception
