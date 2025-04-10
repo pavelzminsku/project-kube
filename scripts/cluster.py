@@ -46,9 +46,10 @@ def main():
         
 
 def finalizer():
-    os.system('/usr/bin/yc config unset cloud-id')
-    os.system('/usr/bin/yc config unset service-account-key')
-
+    #os.system('/usr/bin/yc config unset cloud-id')
+    #os.system('/usr/bin/yc config unset service-account-key')
+    #os.system('/usr/bin/yc config unset folder-id')
+    pass
 if __name__ == "__main__":
 
     try:
