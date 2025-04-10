@@ -71,8 +71,8 @@ def create_cluster(cluster_name: str, nodes: int):
         creation = subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes node-group create \
                                         --cluster-name {cluster_name} --cores 4 --disk-size 40 --disk-type network-nvme \
                                         --fixed-size {nodes} --location zone=ru-central1-a,subnet-name=otus --memory 6 \
-                                        --name {cluster_name} --network-acceleration-type standard \
-                                        --container-runtime containerd --node-name {cluster_name}-')
+                                        --name {cluster_name}-nodes --network-acceleration-type standard \
+                                        --container-runtime containerd --node-name {cluster_name}-node-')
         logging.debug(f"Creation \n{creation}")
         start_of_json = creation.find("{")
         json_creation = json.loads(creation[start_of_json:])
