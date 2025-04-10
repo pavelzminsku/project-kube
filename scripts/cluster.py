@@ -62,8 +62,9 @@ def create_cluster(cluster_name: str, nodes: int):
                                     --zone ru-central1-a --cluster-ipv4-range "172.17.0.0/16" --service-ipv4-range \
                                     "172.18.0.0/16" --public-ip --version 1.31 --format json')
         logging.debug(f"Creation cluster: \n {creation}")
-        json_creation = json.loads(creation)
-
+        start_of_json = creation.find("{")
+        json_creation = json.loads(creation[start_of_json:])
+        logging.debug(f"Creation json {json_creation}")
     nodes_exist = json.loads(subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes node-group list --format json'))
     if not nodes_exist:
         logging.info(f'There is no nodes in cluster with name {cluster_name}, creating...')
@@ -74,7 +75,10 @@ def create_cluster(cluster_name: str, nodes: int):
                                         --network-interface security-group-ids=default-sg-enpeuj757u5vlvs989m4,ipv4-address=auto \
                                         --container-runtime containerd --node-name {cluster_name}-')
         logging.debug(f"Creation \n{creation}")
+        start_of_json = creation.find("{")
+        json_creation = json.loads(creation[start_of_json:])
         json_creation = json.loads(creation)
+        logging.debug(f"Creation json {json_creation}")
         
 def main():
     if not install_yc():
