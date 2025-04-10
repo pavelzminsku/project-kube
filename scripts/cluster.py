@@ -38,7 +38,7 @@ def main():
                 logging.debug(f"Starting cluster")
     if not cluster_exists:
         creation = json.loads(subprocess.getoutput('/usr/bin/yc managed-kubernetes cluster create --name otus --network-name otus --subnet-name otus --zone ru-central1-a --cluster-ipv4-range "172.17.0.0/16" --service-ipv4-range "172.18.0.0/16" --public-ip --format json'))
-        logging.debug(f"Creation cluster: \n {creation}")
+        logging.debug(f"Creation cluster:  \n {creation}")
         
 
 def finalizer():
