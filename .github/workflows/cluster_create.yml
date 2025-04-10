@@ -9,7 +9,7 @@ on:
 
 jobs:
   run-cluster-script:
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     runs-on: self-hosted
 
     steps:
