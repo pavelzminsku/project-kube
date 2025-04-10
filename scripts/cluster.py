@@ -34,12 +34,13 @@ def main():
     clusters = json.loads(subprocess.getoutput('/usr/bin/yc managed-kubernetes cluster list --format json'))
     logging.debug(f'{clusters}')
     cluster_exists = 0
-    for cluster in clusters:
-        if cluster['name'] == 'otus':
-            cluster_exists = 1
-            if cluster['status'] == "STOPPED":
-                os.system('yc managed-kubernetes cluster start --name otus')
-                logging.debug(f"Starting cluster")
+    if clusters:
+        for cluster in clusters:
+            if cluster['name'] == 'otus':
+                cluster_exists = 1
+                if cluster['status'] == "STOPPED":
+                    os.system('yc managed-kubernetes cluster start --name otus')
+                    logging.debug(f"Starting cluster")
     if not cluster_exists:
         creation = json.loads(subprocess.getoutput('/usr/bin/yc managed-kubernetes cluster create --name otus --network-name otus --subnet-name otus --zone ru-central1-a --cluster-ipv4-range "172.17.0.0/16" --service-ipv4-range "172.18.0.0/16" --public-ip --format json'))
         logging.debug(f"Creation cluster: \n {creation}")
