@@ -40,11 +40,17 @@ jobs:
         fi
 
     - name: Run cluster script
-      if: env.cluster_changed == 'true'
+      # if: env.cluster_changed == 'true'
       env:
         SECRET: ${{ secrets.SECRET }}
         CLOUD: ${{ secrets.CLOUD }}
         FOLDER: ${{ secrets.FOLDER }}
       run: |
-        echo $SECRET
         python3 scripts/cluster.py
+    
+    - name: Run argocd script
+      env:
+        DB_PASS: "1"
+        AGRO_PASS: "1"
+      run: |
+        echo $DB_PASS
