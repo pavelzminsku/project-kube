@@ -1,0 +1,14 @@
+global:
+  domain: argocd-project.retail-consult.by
+configs:
+  params:
+    server.insecure: true
+  secret:
+    ## `htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/'`
+    argocdServerAdminPassword: "$2a$10$X8X.dqAalNX6VwyALz1atOGZQeNn6azbx/yikMusQHYe7Spo9uBbq"
+server:
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    hostname: argocd-project.retail-consult.by
+    tls: true

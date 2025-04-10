@@ -53,4 +53,4 @@ jobs:
         DB_PASS: "1"
         AGRO_PASS: "1"
       run: |
-        echo $DB_PASS
+        python3 scripts/argocd.py

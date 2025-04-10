@@ -4,7 +4,7 @@ import os
 import logging
 
 
-logging.basicConfig(level="DEBUG")
+logging.basicConfig(level="INFO")
 
 def install_yc():
     user = os.getenv("USER")
