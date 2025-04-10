@@ -70,7 +70,7 @@ def create_cluster(cluster_name: str, nodes: int):
         logging.info(f'There is no nodes in cluster with name {cluster_name}, creating...')
         creation = subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes node-group create \
                                         --cluster-name {cluster_name} --cores 4 --disk-size 40GB --disk-type network-nvme \
-                                        --fixed-size {nodes} --location zone=ru-central1-a --memory 8GB \
+                                        --fixed-size {nodes} --memory 8GB \
                                         --name {cluster_name} --network-acceleration-type standard \
                                         --container-runtime containerd --public-ip --node-name {cluster_name}-node-' +
                                         '{instance.index} --format json')
