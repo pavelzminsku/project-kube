@@ -56,21 +56,25 @@ def create_cluster(cluster_name: str, nodes: int):
                     logging.debug(f"Starting cluster")
     if not cluster_exists:
         logging.info(f'There is no cluster with name {cluster_name}, creating...')
-        creation = json.loads(subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes cluster create \
+        creation = subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes cluster create \
                                     --name {cluster_name} --network-name otus --master-location zone=ru-central1-a,subnet-name=otus\
                                     --service-account-name k8s --node-service-account-name k8s --subnet-name otus \
                                     --zone ru-central1-a --cluster-ipv4-range "172.17.0.0/16" --service-ipv4-range \
-                                    "172.18.0.0/16" --public-ip --version 1.31 --format json'))
+                                    "172.18.0.0/16" --public-ip --version 1.31 --format json')
         logging.debug(f"Creation cluster: \n {creation}")
+        json_creation = json.loads(creation)
+
     nodes_exist = json.loads(subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes node-group list --format json'))
     if not nodes_exist:
         logging.info(f'There is no nodes in cluster with name {cluster_name}, creating...')
-        creation = json.loads(subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes node-group create \
+        creation = subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes node-group create \
                                         --cluster-name {cluster_name} --cores 4 --disk-size 40 --disk-type network-nvme \
                                         --fixed-size {nodes} --location zone=ru-central1-a,subnet-name=otus --memory 6> \
                                         --name {cluster_name} --network-acceleration-type standard \
                                         --network-interface security-group-ids=default-sg-enpeuj757u5vlvs989m4,ipv4-address=auto \
-                                        --container-runtime containerd --node-name {cluster_name}-'))
+                                        --container-runtime containerd --node-name {cluster_name}-')
+        logging.debug(f"Creation \n{creation}")
+        json_creation = json.loads(creation)
         
 def main():
     if not install_yc():
