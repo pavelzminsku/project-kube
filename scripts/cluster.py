@@ -18,8 +18,8 @@ def main():
             logging.debug(f"Adding file errors: {error}")
             error += os.system('/usr/bin/yc config set service-account-key temp_key.key')
             logging.debug(f"Adding key errors: {error}")
-            error += os.system('rm temp_key.key')
-            logging.debug(f"Removing file errors: {error}")
+            #error += os.system('rm temp_key.key')
+            #logging.debug(f"Removing file errors: {error}")
             if not error:
                 error += os.system('/usr/bin/yc config set cloud-id $CLOUD')
                 logging.debug(f"Adding cloud errors: {error}")
