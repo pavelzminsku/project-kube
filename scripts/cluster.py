@@ -72,12 +72,40 @@ def create_cluster(cluster_name: str, nodes: int):
                                         --cluster-name {cluster_name} --cores 4 --disk-size 40GB --disk-type network-nvme \
                                         --fixed-size {nodes} --location zone=ru-central1-a,subnet-name=otus --memory 8GB \
                                         --name {cluster_name} --network-acceleration-type standard \
-                                        --container-runtime containerd --node-name {cluster_name}-node-' + '{instance.index}')
+                                        --container-runtime containerd --node-name {cluster_name}-node-' + '{instance.index} --format json')
         logging.debug(f"Creation \n{creation}")
         start_of_json = creation.find("{")
         json_creation = json.loads(creation[start_of_json:])
         json_creation = json.loads(creation)
         logging.debug(f"Creation json {json_creation}")
+
+
+def install_kubectl():
+    if not os.path.exists('/usr/local/bin/kubectl'):
+        logging.info(f'No kubectl installed. Installing...')
+        error = 0
+        error += os.system('curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"')
+        logging.debug(f"Download kubectl errors: {error}")
+        error += os.system('sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl')
+        logging.debug(f"Installed kubectl errors: {error}")
+        os.system('rm kubectl')
+        if error:
+            return False
+    return True
+    
+def install_helm():
+    if not os.path.exists('/usr/local/bin/helm'):
+        logging.info(f'No helm installed. Installing...')
+        error = 0
+        error += os.system('curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3')
+        logging.debug(f"Download helm errors: {error}")
+        os.system('chmod 700 get_helm.sh')
+        error += os.system('./get_helm.sh')
+        logging.debug(f"Installed helm errors: {error}")
+        os.system('rm get_helm.sh')     
+        if error:
+            return False
+    return True
 
 def main():
     if not install_yc():
@@ -100,6 +128,19 @@ def main():
     except Exception as e:
         print(f'Error while running script: {e}')
     finally:
+        if not install_kubectl():
+            logging.error("Error while installing kubectl. Exiting")
+            finalizer()
+            exit(1)
+        if not install_helm():
+            logging.error("Error while installing helm. Exiting")
+            finalizer()
+            exit(1)
+        error = os.system(f'yc managed-kubernetes cluster get-credentials --internal --name {config["name"]} --force')
+        if error:
+            logging.error("Error taking config from yc. Exiting")
+            finalizer()
+            exit(1)
         finalizer()
         
 
