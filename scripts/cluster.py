@@ -14,7 +14,7 @@ def main():
         error += os.system('/usr/bin/yc config profile create otus')
         logging.debug(f"Creating profile errors: {error}")
         if not error:
-            error += os.system('echo $SECRET temp_key.key')
+            error += os.system('echo $SECRET > temp_key.key')
             logging.debug(f"Adding file errors: {error}")
             error += os.system('/usr/bin/yc config set service-account-key temp_key.key')
             logging.debug(f"Adding key errors: {error}")
