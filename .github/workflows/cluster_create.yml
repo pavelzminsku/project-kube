@@ -33,7 +33,7 @@ jobs:
     - name: Check if cluster.py was changed
       id: check-cluster
       run: |
-        if echo "${{ env.CHANGED_FILES }}" | grep -q "scripts/cluster.py"; then
+        if echo "${{ env.CHANGED_FILES }}" | grep -q "cluster.json"; then
           echo "changed=true" >> $GITHUB_ENV
         else
           echo "changed=false" >> $GITHUB_ENV
