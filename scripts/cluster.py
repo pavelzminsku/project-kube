@@ -76,8 +76,8 @@ def main():
     if not install_yc():
         logging.error(f"Can't install Yandex cli. Exiting")
         exit(1)
-    if not os.path.exists("config.json"):
-        logging.error(f"No config.json file in repo. Exiting")
+    if not os.path.exists("cluster.json"):
+        logging.error(f"No cluster.json file in repo. Exiting")
         exit(1)
     with open("cluster.json", "r") as file:
         config = json.loads(file.read())

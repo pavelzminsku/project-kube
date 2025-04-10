@@ -30,17 +30,17 @@ jobs:
         echo "$CHANGED_FILES" >> $GITHUB_ENV
         echo "EOF" >> $GITHUB_ENV
 
-    - name: Check if cluster.py was changed
+    - name: Check if cluster.json was changed
       id: check-cluster
       run: |
         if echo "${{ env.CHANGED_FILES }}" | grep -q "cluster.json"; then
-          echo "changed=true" >> $GITHUB_ENV
+          echo "cluster_changed=true" >> $GITHUB_ENV
         else
-          echo "changed=false" >> $GITHUB_ENV
+          echo "cluster_changed=false" >> $GITHUB_ENV
         fi
 
     - name: Run cluster script
-      if: env.changed == 'true'
+      if: env.cluster_changed == 'true'
       env:
         SECRET: ${{ secrets.SECRET }}
         CLOUD: ${{ secrets.CLOUD }}
