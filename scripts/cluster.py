@@ -72,7 +72,8 @@ def create_cluster(cluster_name: str, nodes: int):
                                         --cluster-name {cluster_name} --cores 4 --disk-size 40GB --disk-type network-nvme \
                                         --fixed-size {nodes} --location zone=ru-central1-a,subnet-name=otus --memory 8GB \
                                         --name {cluster_name} --network-acceleration-type standard \
-                                        --container-runtime containerd --node-name {cluster_name}-node-' + '{instance.index} --format json')
+                                        --container-runtime containerd --public-ip--node-name {cluster_name}-node-' +
+                                        '{instance.index} --format json')
         logging.debug(f"Creation \n{creation}")
         start_of_json = creation.find("{")
         json_creation = json.loads(creation[start_of_json:])
