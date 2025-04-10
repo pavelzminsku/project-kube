@@ -6,6 +6,7 @@ import logging
 logging.basicConfig(level="DEBUG")
 
 def main():
+    echo(os.getenv('FOLDER'))
     profiles = subprocess.getoutput('yc config profile list')
     logging.debug(f"Profiles: {profiles}")
     if not profiles or not 'otus' in profiles:
