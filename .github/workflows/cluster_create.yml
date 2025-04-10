@@ -1,0 +1,41 @@
+name: Run Cluster Script
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
+
+jobs:
+  run-cluster-script:
+    if: github.event.pull_request.merged == true
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Get changed files
+      id: changed-files
+      run: |
+        echo "CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})" >> $GITHUB_ENV
+
+    - name: Check if cluster.py was changed
+      id: check-cluster
+      run: |
+        if echo "${{ env.CHANGED_FILES }}" | grep -q "scripts/cluster.py"; then
+          echo "changed=true" >> $GITHUB_ENV
+        else
+          echo "changed=false" >> $GITHUB_ENV
+        fi
+
+    - name: Run cluster script
+      if: env.changed == 'true'
+      env:
+        SECRET: ${{ secrets.SECRET }}
+        CLOUD: ${{ secrets.CLOUD }}
+        FOLDER: ${{ secrets.FOLDER }}
+      run: |
+        echo $SECRET
+        python3 scripts/cluster.py
