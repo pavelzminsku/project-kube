@@ -99,3 +99,8 @@ collabora:
     - secretName: ""
       hosts:
       - office-project.retail-consult.by
+
+persistence:
+  enabled: true
+  storageClass: yc-network-hdd
+  size: 1Gi
