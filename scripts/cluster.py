@@ -44,6 +44,7 @@ def yc_login():
 def create_netowrk():
     user = os.getenv("USER")
     nets = json.loads(subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc vpc network list --format json'))
+    logging.debug(f'Networks list : {nets}')
     net_exists, error, subnet_exists = 0, 0, 0
     if nets:
         for net in nets:
@@ -57,6 +58,7 @@ def create_netowrk():
             logging.error(f'Error while creating netwonk. Do you have limit? Exiting')
             exit(1)
     subnets = json.loads(subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc vpc network list-subnets --name otus --format json'))
+    logging.debug(f'Subnetworks list : {subnets}')
     if subnets:
         for subnet in subnets:
             if subnet['name'] == "otus":
@@ -74,7 +76,7 @@ def create_netowrk():
 def create_cluster(cluster_name: str, nodes: int):
     user = os.getenv("USER")
     clusters = json.loads(subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes cluster list --format json'))
-    logging.debug(f'{clusters}')
+    logging.debug(f'Clusters list: {clusters}')
     cluster_exists = 0
     if clusters:
         for cluster in clusters:
@@ -96,8 +98,10 @@ def create_cluster(cluster_name: str, nodes: int):
         json_creation = json.loads(creation[start_of_json:])
         logging.debug(f"Creation json {json_creation}")
     nodes_exist = json.loads(subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes node-group list --format json'))
+    logging.debug(f'Nodes list : {nodes_exist}')
     security_groups = json.loads(subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc vpc network list-security-groups \
                                                       --name otus --format json'))
+    logging.debug(f'Secutity groups list : {nodes_exist}')
     for security in security_groups:
         if security['name'].startswith("default"):
             secutity_group = security['id']
