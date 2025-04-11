@@ -8,15 +8,16 @@ logging.basicConfig(level="DEBUG")
 
 def install_argocd():
     logging.debug(f"Installing argocd")
-    installed = subprocess.getoutput('helm list -n argocd -o json')
+    installed = subprocess.getoutput('/usr/local/bin/helm list -n argocd -o json')
+    logging.degug(f'Helm list: {installed}')
     if not installed:
         error = 0
         logging.debug(f"No argocd found. Installing...")
-        error += os.system('helm repo add argo https://argoproj.github.io/argo-helm')
+        error += os.system('/usr/local/bin/helm repo add argo https://argoproj.github.io/argo-helm')
         logging.debug(f'Adding repo, errors: {error}')
-        error += os.system('helm install argocd argo/argo-cd -n argocd -f values/argocd-values.yaml --create-namespace --wait')
+        error += os.system('/usr/local/bin/helm install argocd argo/argo-cd -n argocd -f values/argocd-values.yaml --create-namespace --wait')
         logging.debug(f'Installing argo, errors: {error}')
-    os.system('kubectl apply -f app-of-apps.yaml')
+    os.system('/usr/local/bin/kubectl apply -f app-of-apps.yaml')
 
 def main():
     install_argocd()
