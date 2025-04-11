@@ -171,6 +171,7 @@ def main():
         create_cluster(config["name"], int(config["nodes"]))
     except Exception as e:
         print(f'Error while creating cluster: {e}')
+        exit(1)
     if not install_kubectl():
         logging.error("Error while installing kubectl. Exiting")
         exit(1)
