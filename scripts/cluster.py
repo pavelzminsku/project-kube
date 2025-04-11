@@ -41,6 +41,36 @@ def yc_login():
         if error:
             raise Exception 
         
+def create_netowrk():
+    user = os.getenv("USER")
+    nets = json.loads(subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc vpc network list --format json'))
+    net_exists, error, subnet_exists = 0, 0, 0
+    if nets:
+        for net in nets:
+            if net['name'] == "otus":
+                net_exists = 1
+    if not net_exists:
+        logging.info(f'Network otus not found. Creating')
+        error += os.system(f'/home/{user}/yandex-cloud/bin/yc vpc network create otus')
+        logging.debug(f"Adding network errors: {error}")
+        if error:
+            logging.error(f'Error while creating netwonk. Do you have limit? Exiting')
+            exit(1)
+    subnets = json.loads(subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc vpc network list-subnets --name otus --format json'))
+    if subnets:
+        for subnet in subnets:
+            if subnet['name'] == "otus":
+                subnet_exists = 1
+    if not subnet_exists:
+        logging.info(f'Subnetwork otus not found. Creating')
+        error += os.system(f'/home/{user}/yandex-cloud/bin/yc vpc subnet create --network-name otus --name otus \
+                           --zone ru-central1-a --range 172.16.172.0/24')
+        logging.debug(f"Adding subnet errors: {error}")
+        if error:
+            logging.error(f'Error while creating subnetwonk. Exiting')
+            exit(1)
+    
+        
 def create_cluster(cluster_name: str, nodes: int):
     user = os.getenv("USER")
     clusters = json.loads(subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes cluster list --format json'))
@@ -51,7 +81,7 @@ def create_cluster(cluster_name: str, nodes: int):
             if cluster['name'] == cluster_name:
                 cluster_exists = 1
                 if cluster['status'] == "STOPPED":
-
+                    logging.info(f'Cluster stopped. Starting...')
                     os.system(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes cluster start --name {cluster_name}')
                     logging.debug(f"Starting cluster")
     if not cluster_exists:
@@ -66,14 +96,19 @@ def create_cluster(cluster_name: str, nodes: int):
         json_creation = json.loads(creation[start_of_json:])
         logging.debug(f"Creation json {json_creation}")
     nodes_exist = json.loads(subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes node-group list --format json'))
+    security_groups = json.loads(subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/ycyc vpc network list-security-groups 
+                                                      --name otus --format json'))
+    for security in security_groups:
+        if security['name'].startswith("default"):
+            secutity_group = security['id']
     if not nodes_exist:
         logging.info(f'There is no nodes in cluster with name {cluster_name}, creating...')
         creation = subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes node-group create \
                                         --cluster-name {cluster_name} --cores 4 --disk-size 40GB --disk-type network-nvme \
                                         --fixed-size {nodes} --memory 8GB --name {cluster_name}\
-                                        --network-interface security-group-ids=enpks7fkne48g2u078ui,subnets=otus,ipv4-address=nat \
-                                         --network-acceleration-type standard --container-runtime containerd  \
-                                         --node-name {cluster_name}-node-' + '{instance.index} --format json')
+                                        --network-interface security-group-ids={secutity_group},subnets=otus,ipv4-address=nat \
+                                        --network-acceleration-type standard --container-runtime containerd  \
+                                        --node-name {cluster_name}-node-' + '{instance.index} --format json')
         logging.debug(f"Creation \n{creation}")
         start_of_json = creation.find("{")
         json_creation = json.loads(creation[start_of_json:])
@@ -109,6 +144,7 @@ def install_helm():
     return True
 
 def main():
+    user = os.getenv("USER")
     if not install_yc():
         logging.error(f"Can't install Yandex cli. Exiting")
         exit(1)
@@ -125,31 +161,22 @@ def main():
         exit(1)
     try:
         yc_login()
+        create_netowrk()
         create_cluster(config["name"], int(config["nodes"]))
     except Exception as e:
-        print(f'Error while running script: {e}')
-    finally:
-        if not install_kubectl():
-            logging.error("Error while installing kubectl. Exiting")
-            finalizer()
-            exit(1)
-        if not install_helm():
-            logging.error("Error while installing helm. Exiting")
-            finalizer()
-            exit(1)
-        error = os.system(f'yc managed-kubernetes cluster get-credentials --external --name {config["name"]} --force')
-        if error:
-            logging.error("Error taking config from yc. Exiting")
-            finalizer()
-            exit(1)
-        finalizer()
-        
+        print(f'Error while creating cluster: {e}')
+    if not install_kubectl():
+        logging.error("Error while installing kubectl. Exiting")
+        exit(1)
+    if not install_helm():
+        logging.error("Error while installing helm. Exiting")
+        exit(1)
+    error = os.system(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes cluster get-credentials --external --name {config["name"]} --force')
+    if error:
+        logging.error("Error taking config from yc. Exiting")
+        exit(1)
+    
 
-def finalizer():
-    #os.system('/usr/bin/yc config unset cloud-id')
-    #os.system('/usr/bin/yc config unset service-account-key')
-    #os.system('/usr/bin/yc config unset folder-id')
-    pass
 
 if __name__ == "__main__":
     main()
