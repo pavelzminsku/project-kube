@@ -118,7 +118,6 @@ def create_cluster(cluster_name: str, nodes: int):
         logging.debug(f"Creation \n{creation}")
         start_of_json = creation.find("{")
         json_creation = json.loads(creation[start_of_json:])
-        json_creation = json.loads(creation)
         logging.debug(f"Creation json {json_creation}")
 
 
