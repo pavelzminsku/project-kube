@@ -39,7 +39,8 @@ def yc_login():
                 error += os.system(f'/home/{user}/yandex-cloud/bin/yc config set folder-id $FOLDER')
                 logging.debug(f"Adding folder errors: {error}")
         if error:
-            raise Exception 
+            logging.error(f"Error while login to yandex")
+            exit(1) 
         
 def create_netowrk():
     user = os.getenv("USER")
