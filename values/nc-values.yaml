@@ -1,0 +1,69 @@
+ingress:
+  enabled: true
+  className: nginx
+  annotations: {}
+  tls:
+     - secretName: ""
+       hosts:
+         - project.retail-consult.by
+
+nextcloud:
+  host: project.retail-consult.by
+  existingSecret:
+    enabled: true
+    secretName: nc-secret
+    usernameKey: nc-user
+    passwordKey: nc-pass
+    tokenKey: ""
+    smtpUsernameKey: ""
+    smtpPasswordKey: ""
+    smtpHostKey: ""
+  objectStore:
+    s3:
+      enabled: true
+      region: "ru-central1"
+      usePathStyle: true
+      existingSecret: nc-secret
+      secretKeys:
+        host: s3host
+        accessKey: s3key
+        secretKey: s3secret
+        bucket: s3bucket
+        sse_c_key: ""
+  defaultConfigs:
+    redis.config.php: false
+
+  configs:
+    caching.config.php: |-
+      <?php
+      $CONFIG = array (
+        'memcache.local' => '\OC\Memcache\APCu',
+        'memcache.distributed' => '\OC\Memcache\Memcached',
+        'memcache.locking' => '\OC\Memcache\Redis',
+        'filelocking.enabled' => 'true',
+        'redis' => array (
+          'host' => 'redis-master',
+          'port' => 6379,
+          'timeout' => 0.0,
+        ),
+        'memcached_servers' => ['memcached','112211'],
+      );
+
+internalDatabase:
+  enabled: false
+externalDatabase:
+  enabled: true
+  type: mysql
+  host: "pxc-db-haproxy"
+  database: nextcloud
+  existingSecret:
+    enabled: true
+    secretName: nc-secret
+    usernameKey: db-user
+    passwordKey: db-pass
+
+metrics:
+  enabled: true
+  replicaCount: 1
+    enabled: true
+    namespace: monitoring

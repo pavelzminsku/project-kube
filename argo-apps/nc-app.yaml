@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nextcloud
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: https://nextcloud.github.io/helm/
+    targetRevision: 6.6.9
+    chart: nextcloud
+    helm:
+      valueFiles:
+        - $values/values/nc-values.yaml
+  - ref: values
+    repoURL: https://github.com/Losyaka/project-kube.git
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
