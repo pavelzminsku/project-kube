@@ -102,7 +102,7 @@ pxc:
 
 haproxy:
   enabled: true
-  size: 1
+  size: 2
   image: percona/haproxy:2.8.11
   # imagePullPolicy: Always
   imagePullSecrets: []
