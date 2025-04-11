@@ -96,7 +96,7 @@ def create_cluster(cluster_name: str, nodes: int):
         json_creation = json.loads(creation[start_of_json:])
         logging.debug(f"Creation json {json_creation}")
     nodes_exist = json.loads(subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes node-group list --format json'))
-    security_groups = json.loads(subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/ycyc vpc network list-security-groups 
+    security_groups = json.loads(subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/ycyc vpc network list-security-groups \
                                                       --name otus --format json'))
     for security in security_groups:
         if security['name'].startswith("default"):
