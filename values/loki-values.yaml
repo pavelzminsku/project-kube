@@ -4,7 +4,7 @@ minioUrlNoHttps: &minioUrlNoHttps storage.yandexcloud.net
 minioRegion: &minioRegion ru-central1
 minioLokiBucket: &minioLokiBucket otus-project-loki
 
-
+deploymentMode: SingleBinary
 global:
   dnsService: "kube-dns"
 loki:
