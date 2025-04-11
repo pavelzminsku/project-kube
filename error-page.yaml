@@ -1,0 +1,85 @@
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: custom-error-pages
+  namespace: ingress-nginx
+data:
+  404: |
+    <!DOCTYPE html>
+    <html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Адаптивное изображение</title>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                background-color: #f8f8f8;
+            }
+            
+            .image-container {
+                max-width: 100%;
+                max-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            img {
+                max-width: 100%;
+                max-height: 100vh;
+                object-fit: contain;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="image-container">
+            <img src="https://ih1.redbubble.net/image.4816852224.2449/st,small,507x507-pad,600x600,f8f8f8.jpg" alt="Изображение">
+        </div>
+    </body>
+    </html>
+  503: |
+    <!DOCTYPE html>
+    <html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Адаптивное изображение</title>
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                background-color: #f8f8f8;
+            }
+            
+            .image-container {
+                max-width: 100%;
+                max-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            img {
+                max-width: 100%;
+                max-height: 100vh;
+                object-fit: contain;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="image-container">
+            <img src="https://ih1.redbubble.net/image.4816852224.2449/st,small,507x507-pad,600x600,f8f8f8.jpg" alt="Изображение">
+        </div>
+    </body>
+    </html>

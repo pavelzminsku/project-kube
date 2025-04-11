@@ -18,6 +18,7 @@ def install_argocd():
         error += os.system('/usr/local/bin/helm install argocd argo/argo-cd -n argocd -f values/argocd-values.yaml --create-namespace --wait')
         logging.debug(f'Installing argo, errors: {error}')
     os.system('/usr/local/bin/kubectl apply -f app-of-apps.yaml')
+    
 
 def main():
     install_argocd()

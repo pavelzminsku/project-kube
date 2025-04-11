@@ -1,0 +1,125 @@
+storageClass: &storageClass yc-network-hdd
+
+updateStrategy: Disabled
+#updateStrategy: SmartUpdate
+upgradeOptions:
+  versionServiceEndpoint: https://check.percona.com
+  apply: disabled
+  schedule: "0 4 * * *"
+unsafeFlags:
+  tls: true
+tls:
+  enabled: false
+pxc:
+  size: 3
+  image:
+    repository: percona/percona-xtradb-cluster
+    tag: 8.0.36-28.1
+  # imagePullPolicy: Always
+  configuration: |
+    [mysqld]
+    max_connections=500
+    skip-name-resolve
+    explicit_defaults_for_timestamp
+    max_allowed_packet=1G
+    bind-address=*
+    character-set-server=UTF8
+    slow_query_log=0
+    long_query_time=10.0
+    #table_open_cache=2048
+    thread_cache_size=16
+    max_heap_table_size=128M
+    tmp_table_size=128M
+    innodb_buffer_pool_size=1G
+    innodb_buffer_pool_instances=4
+    innodb_read_io_threads=16
+    innodb_write_io_threads=16
+    innodb_thread_concurrency=64
+    skip-log-bin
+    sync_binlog=0
+    #from dev
+    innodb_flush_log_at_trx_commit=0
+    innodb_flush_method=O_DIRECT
+    transaction-isolation=READ-COMMITTED
+    #innodb_buffer_pool_instances=5
+    innodb_strict_mode=OFF
+    innodb_log_file_size=64M
+    join_buffer_size=8M
+    performance_schema = ON
+    table_open_cache=8192
+
+  autoRecovery: true
+  annotations:
+    prometheus.io/port: "9104"
+    prometheus.io/scrape: "true"
+  resources:
+    requests:
+      memory: 500Mi
+      cpu: 600m
+  sidecars:
+  - name: mysqld-exporter
+    image: prom/mysqld-exporter
+    imagePullPolicy: IfNotPresent
+    args:
+    - --mysqld.username=monitor:5Element
+    - --mysqld.address=127.0.0.1:3306
+    - --collect.auto_increment.columns
+    - --collect.binlog_size
+    - --collect.engine_innodb_status
+    - --collect.engine_tokudb_status
+    - --collect.global_status
+    - --collect.global_variables
+    - --collect.heartbeat
+    - --collect.info_schema.clientstats
+    - --collect.info_schema.innodb_metrics
+    - --collect.info_schema.innodb_tablespaces
+    - --collect.info_schema.innodb_cmp
+    - --collect.info_schema.innodb_cmpmem
+    - --collect.info_schema.processlist
+    - --collect.info_schema.query_response_time
+    - --collect.info_schema.tablestats
+    - --collect.info_schema.userstats
+    - --collect.perf_schema.eventsstatements
+    - --collect.perf_schema.eventsstatementssum
+    - --collect.perf_schema.eventswaits
+    - --collect.perf_schema.file_events
+    - --collect.perf_schema.file_instances
+    - --collect.perf_schema.indexiowaits
+    - --collect.perf_schema.memory_events
+    - --collect.perf_schema.tableiowaits
+    - --collect.perf_schema.tablelocks
+    ports:
+      - containerPort: 9104
+        name: metrics
+        protocol: TCP
+  persistence:
+    enabled: true
+    storageClass: *storageClass
+    accessMode: ReadWriteOnce
+    size: 2Gi
+  certManager: false
+  clusterSecretName: pxc-db-secrets
+
+haproxy:
+  enabled: true
+  size: 1
+  image: percona/haproxy:2.8.11
+  # imagePullPolicy: Always
+  imagePullSecrets: []
+  # - name: private-registry-credentials
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 600m
+
+proxysql:
+  enabled: false
+
+logcollector:
+  enabled: true
+ 
+pmm:
+  enabled: false
+
+backup:
+  enabled: false

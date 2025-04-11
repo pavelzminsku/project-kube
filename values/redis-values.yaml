@@ -1,0 +1,31 @@
+storageClass: &storageClass yc-network-hdd
+
+# architecture: replication
+architecture: standalone
+auth:
+  enabled: false
+  sentinel: false
+master:
+  count: 1
+  resources:
+    requests:
+      cpu: 300m
+      memory: 128Mi
+  persistence:
+    enabled: true
+    storageClass: *storageClass
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+replica:
+  replicaCount: 0
+  resources: {}
+sentinel:
+  enabled: false
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    namespace: monitoring
+    additionalLabels:
+      release: prometheus

@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app.kubernetes.io/instance: pxc-db
+    app.kubernetes.io/name: percona-xtradb-cluster
+    release: prometheus
+  name: percona-xtradb-cluster
+  namespace: monitoring
+spec:
+  endpoints:
+  - port: metrics
+  jobLabel: jobLabel
+  namespaceSelector:
+    matchNames:
+    - app
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: pxc-db
+      app.kubernetes.io/name: percona-xtradb-cluster

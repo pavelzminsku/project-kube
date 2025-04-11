@@ -1,0 +1,120 @@
+mainUrl: &mainUrl project.retail-consult.by
+prometheusUrl: &prometheusUrl prometheus-project.retail-consult.by
+alertmanagerUrl: &alertmanagerUrl alertmanager-project.retail-consult.by
+alertmanagerUrlFull: &alertmanagerUrlFull https://alertmanager-project.retail-consult.by
+grafanaUrl: &grafanaUrl grafana-project.retail-consult.by
+storageClass: &storageClass yc-network-hdd
+discordLink: &discordLink https://discord.com/api/webhooks/1360152082757451778/ccap8Veuq_sQInrmm_AWzKRXPUxhnQpE79JvG_jkNmPcMPaMDvXh02aq1JzzGjSyhY5C
+
+
+defaultRules:
+  create: true
+  rules:
+    kubeProxy: false
+
+alertmanager:
+  config:
+    route:
+      group_by: ['alertname', 'cluster', 'service']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 3h
+      receiver: 'discord'
+    receivers:
+    - name: 'null'
+    - name: 'discord'
+      discord_configs:
+      - webhook_url: *discordLink
+        send_resolved: true
+    global:
+      resolve_timeout: 5m
+  ingress:
+    enabled: false
+    ingressClassName: nginx
+    hosts:
+    - *alertmanagerUrl
+    paths:
+    - '/'
+    tls:
+    - hosts:
+      - *alertmanagerUrl
+    storage:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: *storageClass
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
+    externalUrl: *alertmanagerUrlFull
+
+grafana:
+  defaultDashboardsTimezone: 'Europe/Minsk'
+  adminUser: 'admin'
+  #adminPassword: 'prom-operator'
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+    - *grafanaUrl
+    path: /
+    tls:
+    - hosts:
+      - *grafanaUrl
+  persistence:
+    enabled: true
+    storageClassName: *storageClass
+    size: '1Gi'
+  additionalDataSources:
+  - type: loki
+    name: loki
+    url: 'http://loki-gateway'
+    basicAuth: false
+    editable: true
+
+
+kubeProxy:
+  enabled: false
+
+
+kubeApiServer:
+  tlsConfig:
+    serverName: kubernetes
+    insecureSkipVerify: true
+
+kubeEtcd:
+  enabled: true
+  serviceMonitor:
+    insecureSkipVerify: true
+
+kubeScheduler:
+  enabled: true
+  serviceMonitor:
+    insecureSkipVerify: true
+
+prometheus:
+  ingress:
+    enabled: false
+    hosts:
+    - *prometheusUrl
+    paths:
+    - '/'
+    tls:
+    - hosts:
+      - *prometheusUrl
+
+  prometheusSpec:
+    retention: 10d
+    retentionSize: 1GB
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: *storageClass
+          resources:
+            requests:
+              storage: 1Gi
+    resources:
+      requests:
+        cpu: 300m
+        memory: 1000Mi
+  additionalServiceMonitors: []

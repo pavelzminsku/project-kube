@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/Losyaka/project-kube
+    repoURL: https://github.com/Losyaka/project-kube.git
     targetRevision: main
     path: argo-apps
   destination:

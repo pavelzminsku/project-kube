@@ -61,7 +61,24 @@ jobs:
     
     - name: Run argocd script
       env:
-        DB_PASS: "1"
-        AGRO_PASS: "1"
+        DB_PASS: ${{ secrets.DB_PASS }}
+        S3_KEY: ${{ secrets.S3_KEY }}
+        S3_SECRET: ${{ secrets.S3_SECRET }}
+        TLS_KEY: ${{ secrets.S3_TLS_KEY }}
+        TLS_CRT: ${{ secrets.S3_TLS_CRT }}
       run: |
+        /usr/local/bin/kubectl create ns ingress-nginx --dry-run=client -o yaml | /usr/local/bin/kubectl apply -f -
+        /usr/local/bin/kubectl create ns monitoring --dry-run=client -o yaml | /usr/local/bin/kubectl apply -f -
+        /usr/local/bin/kubectl create ns argocd --dry-run=client -o yaml | /usr/local/bin/kubectl apply -f -
+        /usr/local/bin/kubectl create ns app --dry-run=client -o yaml | /usr/local/bin/kubectl apply -f -
+        echo $TLS_KEY > tls.key
+        echo $TLS_CRT > tls.crt
+        /usr/local/bin/kubectl create secret tls retail-consult --cert tls.crt --key tls.key -n ingress-nginx --dry-run=client -o yaml | /usr/local/bin/kubectl apply -f -
+        rm tls.key
+        rm tls.crt
+        /usr/local/bin/kubectl apply -f error-page.yaml
+        sed -i "s/\!\!\!S3\_SECRET\!\!\!/$(echo $S3_SECRET | base64)/g" secrets.yaml
+        sed -i "s/\!\!\!S3\_KEY\!\!\!/$(echo $S3_KEY | base64)/g" secrets.yaml
+        sed -i "s/\!\!\!DB\_PASS\!\!\!/$(echo $DB_PASS | base64)/g" secrets.yaml
+        /usr/local/bin/kubectl apply -f secrets.yaml
         python3 scripts/argocd.py

@@ -1,0 +1,5 @@
+serviceMonitor:
+  enabled: true
+  namespace: monitoring
+  labels:
+    release: prometheus

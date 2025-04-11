@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: memcached
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: registry-1.docker.io/bitnamicharts
+    targetRevision: 7.7.1
+    chart: memcached
+    helm:
+      valueFiles:
+        - $values/values/memcached-values.yaml
+  - ref: values
+    repoURL: https://github.com/Losyaka/project-kube.git
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

@@ -1,0 +1,21 @@
+resources:
+  requests:
+    cpu: 200m
+    memory: 128Mi
+metrics:
+  enabled: true
+  service:
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "{{ .Values.metrics.service.ports.metrics }}"
+  serviceMonitor:
+    enabled: true
+    namespace: monitoring
+    labels:
+      release: prometheus
+    jobLabel: jobLabel
+
+persistence:
+  enabled: false
+  storageClass: yc-network-hdd
+

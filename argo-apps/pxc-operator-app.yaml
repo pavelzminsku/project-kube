@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pxc-operator
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: https://percona.github.io/percona-helm-charts
+    targetRevision: 1.16.1
+    chart: pxc-operator
+    helm:
+      valueFiles:
+        - $values/values/pxc-operator-values.yaml
+  - ref: values
+    repoURL: https://github.com/Losyaka/project-kube.git
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

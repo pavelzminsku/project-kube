@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pxc-db
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: https://percona.github.io/percona-helm-charts
+    targetRevision: 1.16.2
+    chart: pxc-db
+    helm:
+      valueFiles:
+        - $values/values/pxc-db-values.yaml
+  - ref: values
+    repoURL: https://github.com/Losyaka/project-kube.git
+    targetRevision: main
+  - repoURL: https://github.com/Losyaka/project-kube.git
+    targetRevision: main
+    path: argo-apps/manifests
+    directory:
+        include: '*.yaml'
+        exclude: '*-app.yaml'
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

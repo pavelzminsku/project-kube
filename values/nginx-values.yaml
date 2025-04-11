@@ -1,0 +1,53 @@
+controller:
+  name: controller
+  enableAnnotationValidations: true
+  config:
+    annotations-risk-level: Critical
+    custom-http-errors: 404,503
+  watchIngressWithoutClass: true
+  allowSnippetAnnotations: true
+  compute-full-forwarded-for: "true"
+  forwarded-for-header: "X-Forwarded-For"
+  use-forwarded-headers: "true"
+  ingressClassResource:
+    default: true
+  extraArgs:
+    default-ssl-certificate: ingress-nginx/retail-consult
+  kind: Deployment
+  tolerations: []
+  affinity: {}
+  nodeSelector:
+    kubernetes.io/os: linux
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 300m
+      memory: 128Mi
+  metrics:
+    enabled: true
+    service:
+      enabled: true
+    serviceMonitor:
+      enabled: true
+      namespace: monitoring
+      labels:
+        release: prometheus
+
+defaultBackend:
+  enabled: true
+  image:
+    registry: registry.k8s.io
+    image: ingress-nginx/custom-error-pages
+    tag: v1.1.2@sha256:49a5154b3f918aae436ae342ac410a947524f1da8a2f9c249b564a092cf44955
+  extraVolumes:
+  - name: custom-error-pages
+    configMap:
+      name: custom-error-pages
+      items:
+      - key: "404"
+        path: "404.html"
+      - key: "503"
+        path: "503.html"
+  extraVolumeMounts:
+  - name: custom-error-pages
+    mountPath: /www

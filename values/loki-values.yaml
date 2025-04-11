@@ -1,0 +1,88 @@
+storageClass: &storageClass yc-network-hdd
+minioUrl: &minioUrl https://storage.yandexcloud.net
+minioUrlNoHttps: &minioUrlNoHttps storage.yandexcloud.net
+minioRegion: &minioRegion ru-central1
+minioLokiBucket: &minioLokiBucket otus-project-loki
+
+
+global:
+  dnsService: "coredns"
+loki:
+  auth_enabled: false
+  storage:
+    bucketNames:
+      chunks: *minioLokiBucket
+      # ruler: 5dev-k8s-loki-ruler
+      # admin: 5dev-k8s-loki-admin
+    type: s3
+    s3:
+      s3: *minioUrl
+      endpoint: *minioUrl
+      region: *minioRegion
+      secretAccessKey: "${S3_SECRET}"
+      accessKeyId: "${S3_KEY}"
+      s3ForcePathStyle: true
+      insecure: false
+    filesystem:
+      # chunks_directory: /var/loki/chunks
+      rules_directory: /var/loki/rules
+      admin_api_directory: /var/loki/admin
+  schemaConfig:
+    configs:
+    - from: 2025-01-01
+      store: tsdb
+      object_store: s3
+      schema: v13
+      index:
+        prefix: "loki_index_"
+        period: 24h
+
+test:
+  enabled: false
+lokiCanary:
+  enabled: false
+write:
+  persistence:
+    volumeClaimsEnabled: true
+    size: 1Gi
+    storageClass: *storageClass
+
+read:
+  persistence:
+    enableStatefulSetAutoDeletePVC: true
+
+    size: 1Gi
+    storageClass: *storageClass
+backend:
+  persistence:
+    volumeClaimsEnabled: true
+    size: 1Gi
+    storageClass: *storageClass
+  resources: 
+    requests:
+      memory: 256Mi
+      cpu: 500m
+  extraArgs:
+    - '-config.expand-env=true'
+  extraEnv:
+    - name: S3_KEY 
+      valueFrom:
+        secretKeyRef:
+          name: loki-s3
+          key: s3-key
+    - name: S3_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: loki-s3
+          key: s3-secret
+
+monitoring:
+  dashboards:
+    enabled: true
+    namespace: monitoring
+    labels:
+      grafana_dashboard: "1"
+  serviceMonitor:
+    enabled: true
+    labels:
+      release: prometheus
