@@ -8,6 +8,13 @@ minioLokiBucket: &minioLokiBucket otus-project-loki
 global:
   dnsService: "coredns"
 loki:
+  commonConfig:
+    replication_factor: 1
+  memcached:
+    chunk_cache:
+      enabled: false
+    results_cache:
+      enabled: false
   auth_enabled: false
   storage:
     bucketNames:
@@ -37,44 +44,45 @@ loki:
         prefix: "loki_index_"
         period: 24h
 
+singleBinary:
+  replicas: 1
+
+chunksCache:
+  enabled: false
+minio:
+  enabled: false
+backend:
+  replicas: 0
+read:
+  replicas: 0
+write:
+  replicas: 0
+ingester:
+  replicas: 0
+querier:
+  replicas: 0
+queryFrontend:
+  replicas: 0
+queryScheduler:
+  replicas: 0
+distributor:
+  replicas: 0
+compactor:
+  replicas: 0
+indexGateway:
+  replicas: 0
+bloomCompactor:
+  replicas: 0
+bloomGateway:
+  replicas: 0
+memcached:
+  enabled: false
+memcachedExporter:
+  enabled: false
 test:
   enabled: false
 lokiCanary:
   enabled: false
-write:
-  persistence:
-    volumeClaimsEnabled: true
-    size: 1Gi
-    storageClass: *storageClass
-
-read:
-  persistence:
-    enableStatefulSetAutoDeletePVC: true
-
-    size: 1Gi
-    storageClass: *storageClass
-backend:
-  persistence:
-    volumeClaimsEnabled: true
-    size: 1Gi
-    storageClass: *storageClass
-  resources: 
-    requests:
-      memory: 256Mi
-      cpu: 500m
-  extraArgs:
-    - '-config.expand-env=true'
-  extraEnv:
-    - name: S3_KEY 
-      valueFrom:
-        secretKeyRef:
-          name: loki-s3
-          key: s3-key
-    - name: S3_SECRET
-      valueFrom:
-        secretKeyRef:
-          name: loki-s3
-          key: s3-secret
 
 monitoring:
   dashboards:
