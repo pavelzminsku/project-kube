@@ -65,5 +65,6 @@ externalDatabase:
 metrics:
   enabled: true
   replicaCount: 1
+  serviceMonitor:
     enabled: true
     namespace: monitoring
