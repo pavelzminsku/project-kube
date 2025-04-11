@@ -46,7 +46,19 @@ loki:
 
 singleBinary:
   replicas: 1
-
+  extraArgs:
+    - '-config.expand-env=true'
+  extraEnv:
+    - name: S3_KEY 
+      valueFrom:
+        secretKeyRef:
+          name: loki-s3
+          key: s3-key
+    - name: S3_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: loki-s3
+          key: s3-secret
 chunksCache:
   enabled: false
 minio:
