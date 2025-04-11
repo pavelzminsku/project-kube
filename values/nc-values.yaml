@@ -46,7 +46,9 @@ nextcloud:
           'port' => 6379,
           'timeout' => 0.0,
         ),
-        'memcached_servers' => ['memcached','112211'],
+        'memcached_servers' => array(
+          array('memcached', 11211),
+        ),
       );
 
 internalDatabase:
@@ -68,3 +70,32 @@ metrics:
   serviceMonitor:
     enabled: true
     namespace: monitoring
+
+collabora:
+  enabled: true
+  collabora:
+    aliasgroups:
+      - host: "https://project.retail-consult.by:443"
+
+    # you may need to add --o:ssl.termination=true
+    extra_params: --o:ssl.enable=false
+
+    server_name: office-project.retail-consult.by
+
+    existingSecret:
+      enabled: true
+      secretName: nc-secret
+      usernameKey: "nc-user"
+      passwordKey: "nc-pass"
+  ingress:
+    enabled: true
+    className: nginx
+    hosts:
+      - host: office-project.retail-consult.by
+        paths:
+        - path: /
+          pathType: ImplementationSpecific
+    tls:
+    - secretName: ""
+      hosts:
+      - office-project.retail-consult.by
