@@ -71,8 +71,8 @@ jobs:
         /usr/local/bin/kubectl create ns monitoring --dry-run=client -o yaml | /usr/local/bin/kubectl apply -f -
         /usr/local/bin/kubectl create ns argocd --dry-run=client -o yaml | /usr/local/bin/kubectl apply -f -
         /usr/local/bin/kubectl create ns app --dry-run=client -o yaml | /usr/local/bin/kubectl apply -f -
-        echo $TLS_KEY > tls.key
-        echo $TLS_CRT > tls.crt
+        echo $TLS_KEY | base64 -d > tls.key
+        echo $TLS_CRT | base64 -d > tls.crt
         /usr/local/bin/kubectl create secret tls retail-consult --cert tls.crt --key tls.key -n ingress-nginx --dry-run=client -o yaml | /usr/local/bin/kubectl apply -f -
         rm tls.key
         rm tls.crt
