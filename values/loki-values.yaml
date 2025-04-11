@@ -6,7 +6,7 @@ minioLokiBucket: &minioLokiBucket otus-project-loki
 
 
 global:
-  dnsService: "coredns"
+  dnsService: "kube-dns"
 loki:
   commonConfig:
     replication_factor: 1
