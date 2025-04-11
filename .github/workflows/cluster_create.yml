@@ -77,9 +77,9 @@ jobs:
         rm tls.key
         rm tls.crt
         /usr/local/bin/kubectl apply -f error-page.yaml
-        sed -i "s/\!\!\!S3\_SECRET\!\!\!/$(echo $S3_SECRET | base64)/g" secrets.yaml
-        sed -i "s/\!\!\!S3\_KEY\!\!\!/$(echo $S3_KEY | base64)/g" secrets.yaml
-        sed -i "s/\!\!\!DB\_PASS\!\!\!/$(echo $DB_PASS | base64)/g" secrets.yaml
+        sed -i "s/\!\!\!S3\_SECRET\!\!\!/$(echo -n $S3_SECRET | base64)/g" secrets.yaml
+        sed -i "s/\!\!\!S3\_KEY\!\!\!/$(echo -n $S3_KEY | base64)/g" secrets.yaml
+        sed -i "s/\!\!\!DB\_PASS\!\!\!/$(echo -n $DB_PASS | base64)/g" secrets.yaml
         /usr/local/bin/kubectl apply -f secrets.yaml
         rm secrets.yaml
         python3 scripts/argocd.py
