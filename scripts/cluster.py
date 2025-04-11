@@ -164,12 +164,12 @@ def main():
     if not "nodes" in config:
         logging.error(f"No nodes in config. Exiting")
         exit(1)
-    try:
-        yc_login()
-        create_netowrk()
-        create_cluster(config["name"], int(config["nodes"]))
-    except Exception as e:
-        print(f'Error while creating cluster: {e}')
+    #try:
+    yc_login()
+    create_netowrk()
+    create_cluster(config["name"], int(config["nodes"]))
+    #except Exception as e:
+    #    print(f'Error while creating cluster: {e}')
     if not install_kubectl():
         logging.error("Error while installing kubectl. Exiting")
         exit(1)

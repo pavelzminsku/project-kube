@@ -9,7 +9,7 @@ logging.basicConfig(level="DEBUG")
 def install_argocd():
     logging.debug(f"Installing argocd")
     installed = subprocess.getoutput('/usr/local/bin/helm list -n argocd -o json')
-    logging.degug(f'Helm list: {installed}')
+    logging.debug(f'Helm list: {installed}')
     if not installed:
         error = 0
         logging.debug(f"No argocd found. Installing...")
