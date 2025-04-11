@@ -103,9 +103,10 @@ def create_cluster(cluster_name: str, nodes: int):
     security_groups = json.loads(subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc vpc network list-security-groups \
                                                       --name otus --format json'))
     logging.debug(f'Secutity groups list : {nodes_exist}')
-    for security in security_groups:
-        if security['name'].startswith("default"):
-            secutity_group = security['id']
+    if security_groups:
+        for security in security_groups:
+            if "name" in security and security['name'].startswith("default"):
+                secutity_group = security['id']
     if not nodes_exist:
         logging.info(f'There is no nodes in cluster with name {cluster_name}, creating...')
         creation = subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes node-group create \
@@ -164,12 +165,12 @@ def main():
     if not "nodes" in config:
         logging.error(f"No nodes in config. Exiting")
         exit(1)
-    #try:
-    yc_login()
-    create_netowrk()
-    create_cluster(config["name"], int(config["nodes"]))
-    #except Exception as e:
-    #    print(f'Error while creating cluster: {e}')
+    try:
+        yc_login()
+        create_netowrk()
+        create_cluster(config["name"], int(config["nodes"]))
+    except Exception as e:
+        print(f'Error while creating cluster: {e}')
     if not install_kubectl():
         logging.error("Error while installing kubectl. Exiting")
         exit(1)
