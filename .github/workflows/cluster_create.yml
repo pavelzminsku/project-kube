@@ -10,13 +10,24 @@ on:
 jobs:
   run-cluster-script:
     # if: github.event.pull_request.merged == true
-    runs-on: self-hosted
-
+    #runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    #- name: Install dependencies
+    #  run: |
+    #    sudo apt-get update
+    #    sudo apt-get install -y python3-pip
+    #    pip3 install -r requirements.txt
 
     - name: Get changed files
       id: changed-files
