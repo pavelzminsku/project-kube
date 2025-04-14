@@ -80,37 +80,8 @@ metrics:
     namespace: monitoring
 
 collabora:
-  enabled: true
-  collabora:
-    aliasgroups:
-      - host: "https://office-project.retail-consult.by:443"
-      - host: "https://office-project.retail-consult.by:443"
-      - host: "http://office-project.retail-consult.by:80"
-      - host: "http://office-project.retail-consult.by:80"
-
-
-    # you may need to add --o:ssl.termination=true
-    extra_params: --o:ssl.enable=true --o:ssl.ssl_verification=false
-
-    server_name: office-project.retail-consult.by
-
-    existingSecret:
-      enabled: true
-      secretName: nc-secret
-      usernameKey: "nc-user"
-      passwordKey: "nc-pass"
-  ingress:
-    enabled: true
-    className: nginx
-    hosts:
-      - host: office-project.retail-consult.by
-        paths:
-        - path: /
-          pathType: ImplementationSpecific
-    tls:
-    - secretName: ""
-      hosts:
-      - office-project.retail-consult.by
+  enabled: false
+ 
 
 persistence:
   enabled: true
