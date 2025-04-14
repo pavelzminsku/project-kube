@@ -90,7 +90,7 @@ collabora:
 
 
     # you may need to add --o:ssl.termination=true
-    extra_params: --o:ssl.enable=true --o:ssl.termination=true
+    extra_params: --o:ssl.enable=true --o:ssl.ssl_verification=false
 
     server_name: office-project.retail-consult.by
 
