@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onlyoffice
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: onlyoffice
+  template:
+    metadata:
+      labels:
+        app: onlyoffice
+    spec:
+      containers:
+      - name: onlyoffice
+        image: ghcr.io/thomisus/onlyoffice-documentserver-unlimited:8.1.3
+        env:
+        - name: ALLOW_PRIVATE_IP_ADDRESS
+          value: "TRUE"
+        - name: ALLOW_META_IP_ADDRES
+          value: "TRUE"
+        - name: JWT_ENABLED
+          value: "true"
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: nc-secret
+              key: db-pass
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: onlyoffice
+  namespace: app
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: onlyoffice
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: onlyoffice
+  namespace: app
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: office-project.retail-consult.by
+    http:
+      paths:
+        - pathType: Prefix
+          backend:
+            service:
+              name: onlyoffice
+              port:
+                number: 80
+          path: /
+  tls:
+    - hosts:
+      - office-project.retail-consult.by
+
