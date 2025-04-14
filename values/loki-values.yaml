@@ -2,7 +2,6 @@ storageClass: &storageClass yc-network-hdd
 minioUrl: &minioUrl https://storage.yandexcloud.net
 minioUrlNoHttps: &minioUrlNoHttps storage.yandexcloud.net
 minioRegion: &minioRegion ru-central1
-minioLokiBucket: &minioLokiBucket otus-project-loki
 
 deploymentMode: SingleBinary
 global:
@@ -18,7 +17,7 @@ loki:
   auth_enabled: false
   storage:
     bucketNames:
-      chunks: *minioLokiBucket
+      chunks: "${S3_BUCKET}"
       # ruler: 5dev-k8s-loki-ruler
       # admin: 5dev-k8s-loki-admin
     type: s3
@@ -59,6 +58,11 @@ singleBinary:
         secretKeyRef:
           name: loki-s3
           key: s3-secret
+    - name: S3_BUCKET
+      valueFrom:
+        secretKeyRef:
+          name: loki-s3
+          key: s3-bucket
 chunksCache:
   enabled: false
 minio:

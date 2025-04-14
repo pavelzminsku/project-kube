@@ -66,6 +66,8 @@ jobs:
         S3_SECRET: ${{ secrets.S3_SECRET }}
         TLS_KEY: ${{ secrets.TLS_KEY }}
         TLS_CRT: ${{ secrets.TLS_CRT }}
+        S3_BUCKET_NC: ${{ secrets.S3_BUCKET_NC }}
+        S3_BUCKET_LOKI: ${{ secrets.S3_BUCKET_LOKI }}
       run: |
         /usr/local/bin/kubectl create ns ingress-nginx --dry-run=client -o yaml | /usr/local/bin/kubectl apply -f -
         /usr/local/bin/kubectl create ns monitoring --dry-run=client -o yaml | /usr/local/bin/kubectl apply -f -
@@ -80,6 +82,8 @@ jobs:
         sed -i "s/\!\!\!S3\_SECRET\!\!\!/$(echo -n $S3_SECRET | base64)/g" secrets.yaml
         sed -i "s/\!\!\!S3\_KEY\!\!\!/$(echo -n $S3_KEY | base64)/g" secrets.yaml
         sed -i "s/\!\!\!DB\_PASS\!\!\!/$(echo -n $DB_PASS | base64)/g" secrets.yaml
+        sed -i "s/\!\!\!S3\_BUCKET\_NC\!\!\!/$(echo -n $S3_BUCKET_NC | base64)/g" secrets.yaml
+        sed -i "s/\!\!\!S3\_BUCKET\_LOKI\!\!\!/$(echo -n $S3_BUCKET_LOKI | base64)/g" secrets.yaml
         /usr/local/bin/kubectl apply -f secrets.yaml
         rm secrets.yaml
         python3 scripts/argocd.py
