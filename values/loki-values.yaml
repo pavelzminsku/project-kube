@@ -63,6 +63,11 @@ singleBinary:
         secretKeyRef:
           name: loki-s3
           key: s3-bucket
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClass: *storageClass
+
 chunksCache:
   enabled: false
 minio:
