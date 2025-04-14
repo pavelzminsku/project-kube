@@ -89,9 +89,9 @@ collabora:
       - host: "https://office-project.retail-consult.by"
 
     # you may need to add --o:ssl.termination=true
-    extra_params: --o:ssl.enable=false
+    extra_params: --o:ssl.enable=true
 
-    server_name: https://office-project.retail-consult.by
+    server_name: office-project.retail-consult.by
 
     existingSecret:
       enabled: true
