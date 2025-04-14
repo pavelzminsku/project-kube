@@ -90,7 +90,7 @@ collabora:
 
 
     # you may need to add --o:ssl.termination=true
-    extra_params: --o:ssl.enable=false
+    extra_params: --o:ssl.enable=true --o:ssl.termination=true
 
     server_name: office-project.retail-consult.by
 
@@ -107,10 +107,10 @@ collabora:
         paths:
         - path: /
           pathType: ImplementationSpecific
-    #tls:
-    #- secretName: ""
-    #  hosts:
-    #  - office-project.retail-consult.by
+    tls:
+    - secretName: ""
+      hosts:
+      - office-project.retail-consult.by
 
 persistence:
   enabled: true
