@@ -83,12 +83,15 @@ collabora:
   enabled: true
   collabora:
     aliasgroups:
-      - host: "https://project.retail-consult.by:443"
+      - host: "office-project.retail-consult.by"
+      - host: "https://office-project.retail-consult.by"
+      - host: "project.retail-consult.by"
+      - host: "https://office-project.retail-consult.by"
 
     # you may need to add --o:ssl.termination=true
     extra_params: --o:ssl.enable=false
 
-    server_name: office-project.retail-consult.by
+    server_name: project.retail-consult.by
 
     existingSecret:
       enabled: true
