@@ -107,10 +107,10 @@ collabora:
         paths:
         - path: /
           pathType: ImplementationSpecific
-    tls:
-    - secretName: ""
-      hosts:
-      - office-project.retail-consult.by
+    #tls:
+    #- secretName: ""
+    #  hosts:
+    #  - office-project.retail-consult.by
 
 persistence:
   enabled: true
