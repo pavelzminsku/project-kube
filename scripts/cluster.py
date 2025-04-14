@@ -88,7 +88,7 @@ def create_cluster(cluster_name: str, nodes: int):
                     os.system(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes cluster start --name {cluster_name}')
                     logging.debug(f"Starting cluster")
     if not cluster_exists:
-        logging.info(f'There is no cluster with name {cluster_name}, creating...')
+        logging.info(f'\nThere is no cluster with name {cluster_name}, creating...')
         creation = subprocess.getoutput(f'/home/{user}/yandex-cloud/bin/yc managed-kubernetes cluster create \
                                     --name {cluster_name} --network-name otus \
                                     --service-account-name k8s --node-service-account-name k8s --subnet-name otus \
