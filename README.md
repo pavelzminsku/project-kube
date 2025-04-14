@@ -3,7 +3,7 @@
 ## Авторы: Уласевич Игорь, Лукша Павел
 
 ### Основные ссылки:
-## https://project.retail-consult.by/ -- сервер NextCloud
+## https://project.retail-consult.by/login?redirect_url=/apps/dashboard/ -- сервер NextCloud
 ## https://office-project.retail-consult.by/ -- сервер для онлайн-редактирования офисных документов
 ## https://argocd-project.retail-consult.by/ -- интерфейс argocd
 ## https://grafana-project.retail-consult.by/ -- grafana для анализа логов и мониторинга

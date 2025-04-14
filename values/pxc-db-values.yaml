@@ -8,6 +8,7 @@ upgradeOptions:
   schedule: "0 4 * * *"
 unsafeFlags:
   tls: true
+  pxcSize: true
 tls:
   enabled: false
 pxc:
