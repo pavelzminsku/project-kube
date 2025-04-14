@@ -1,6 +1,13 @@
 ## Проектная работа по курсу "Инфраструктурная платформа на основе Kubernetes"
-# Корпоративный сервер NextCloud с онлайн редактированием офисных докуемнтов
+# Корпоративный сервер NextCloud с онлайн-редактированием офисных докуемнтов
 ## Авторы: Уласевич Игорь, Лукша Павел
+
+### Основные ссылки:
+## https://project.retail-consult.by/ -- сервер NextCloud
+## https://office-project.retail-consult.by/ -- сервер для онлайн-редактирования офисных документов
+## https://argocd-project.retail-consult.by/ -- интерфейс argocd
+## https://grafana-project.retail-consult.by/ -- grafana для анализа логов и мониторинга
+## Данные для входа даны при сдаче проекта в кабинете студента
 
 ### Описание:
 Проект представляет собой сервер Nextcloud с сервером онлайн редактирования документов OnlyOffice с полносью автоматическим разворачиванием.
@@ -57,13 +64,14 @@
   
 ![1](https://github.com/user-attachments/assets/30594b61-e0a7-4232-8f8f-6c67aca0538b)
 
-
 ![2](https://github.com/user-attachments/assets/5edf46c9-2a75-4bc3-af1b-fb09d331e14d)
 
 ![3](https://github.com/user-attachments/assets/10c3d39b-3964-40f2-81fe-b7c55c3923b8)
 
-
 ![4](https://github.com/user-attachments/assets/ba647bab-09c1-4815-a6f1-c36ffc8ce4a9)
 
+![5](https://github.com/user-attachments/assets/c5c649d5-d910-491c-86d2-2d0fd9e1cb38)
 
-  
+![6](https://github.com/user-attachments/assets/babf2b76-d309-4d40-a1a7-1e5d4dc8e26a)
+
+![7](https://github.com/user-attachments/assets/ae50254b-3c2c-4b3c-89d3-0bb41f15ac9d)
