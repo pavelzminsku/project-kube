@@ -75,6 +75,7 @@ nextcloud:
     logging.config.php: |-
       <?php
       $CONFIG = array (
+        'overwriteprotocol' => 'https',
         'log_type' => 'file',
         'logfile' => 'nextcloud.log',
         'loglevel' => 2,
