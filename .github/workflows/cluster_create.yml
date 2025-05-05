@@ -1,6 +1,7 @@
 name: Run Cluster Script
 
 on:
+  workflow_dispatch:
   pull_request:
     types: [closed]
     branches: [ "main" ]
